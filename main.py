@@ -16,13 +16,19 @@ def get_all_images(url): # obtener todas las imagenes de la url
     return images
 
 def download_images(images): # descargar todas las imagenes
+    if not os.path.exists('downloads'):
+        os.mkdir('downloads')
+
     domain = urlparse(url).netloc
-    if not os.path.exists(domain):
-        os.mkdir(domain)
+    full_path = os.path.join('downloads', domain)
+
+    if not os.path.exists(full_path):
+        os.mkdir(full_path)
+
     for i, img in enumerate(images):
         try:
             response = requests.get(img)
-            with open(os.path.join(domain, f'img_{i}.png'), 'wb') as f:
+            with open(os.path.join(full_path, f'img_{i}.png'), 'wb') as f:
                 f.write(response.content)
         except RequestException as e:
             print(f'Error: {e}')
